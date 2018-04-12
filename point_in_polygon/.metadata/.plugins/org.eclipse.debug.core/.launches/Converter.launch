@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<listEntry value="/point_in_polygon/src/main/Converter.java"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+<listEntry value="1"/>
+</listAttribute>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="main.Converter"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="&quot;C:\\Users\\namssi\\Desktop\\2018-Spring\\Big Data\\final project\\point_in_polygon\\zipcode.txt&quot; &quot;C:\\Users\\namssi\\Desktop\\2018-Spring\\Big Data\\final project\\point_in_polygon\\points.txt&quot; &quot;C:\\Users\\namssi\\Desktop\\2018-Spring\\Big Data\\final project\\point_in_polygon\\results.txt&quot;"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="point_in_polygon"/>
+</launchConfiguration>
