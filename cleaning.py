@@ -9,17 +9,6 @@ from pyspark.sql.types import StringType, StructType, StructField
 from pyspark.sql.functions import col
 from datetime import datetime
 
-
-def mutual_information(hgram):
-	# Convert bins counts to probability values
-	pxy = hgram / float(np.sum(hgram))
-	px = np.sum(pxy, axis=1) # marginal for x over y
-	py = np.sum(pxy, axis=0) # marginal for y over x
-	px_py = px[:, None] * py[None, :] # Broadcast to multiply marginals
-	# Now we can do the calculation using the pxy, px_py 2D arrays
-	nzs = pxy > 0 # Only non-zero pxy values contribute to the sum
-	return np.sum(pxy[nzs] * np.log(pxy[nzs] / px_py[nzs]))
-
 def delete_useless_column(attrF, df, rate):
 	idxDel = [i for i, j in enumerate(attrF) if j > rate]
 	attrDel = [df.columns[i] for i in idxDel]
