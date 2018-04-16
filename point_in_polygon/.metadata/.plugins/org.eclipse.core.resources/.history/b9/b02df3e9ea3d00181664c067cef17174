@@ -1,8 +1,0 @@
-package main;
-
-import main.Point;
-import main.Polygon;
-
-public class main {
-
-}
