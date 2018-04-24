@@ -36,13 +36,6 @@ for colName in df.columns:
 	attrF.append(df.filter(str(colName)+" is null").count()/totL)
 df = delete_useless_column(attrF, df, 0.9)
 
-# delete high-variance columns
-attrF = []
-for colName in df.columns:
-	x = df.select(colName).distinct()
-	attrF.append(x.count() / totL)
-df = delete_useless_column(attrF, df, 0.75)
-
 # Finding Unspecified (if the attribute has over 90% unspecified, will delete)
 attrF = []
 for colName in df.columns:
@@ -53,10 +46,10 @@ df = delete_useless_column(attrF, df, 0.9)
 df2 = df.withColumn('yymmdd', to_date(from_unixtime(unix_timestamp('date', 'MM/dd/yyy')))).drop('date')
 
 # Map time (HH:MM) into 24 hours
-df2 = df2.withColumn('time24',split(col("time"), ':')[0]).drop('time')
+df2 = df2.withColumn('time24',split(col("time"), ':')[0].cast("int")).drop('time')
 
 # Date into day only
-df2 = df2.withColumn('day', day("yymmdd"))
+df2 = df2.withColumn('day', dayofmonth("yymmdd"))
 
 # Date into month only
 df2 = df2.withColumn('month', month("yymmdd"))
