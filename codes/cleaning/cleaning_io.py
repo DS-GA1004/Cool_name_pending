@@ -14,17 +14,6 @@ from datetime import datetime
 
 spark = SparkSession.builder.appName("Python Spark SQL task1").config("spark.some.config.option", "some-value").getOrCreate()
 
-def deleteColumn(df,attrIdx):
-	# Input: 
-	#  - df : dataframe	
-	#  - attrIdx : attribute (column) index from dataframe
-	
-	# Deleting attribute based on attribute index
-	attrDel = [df.columns[i] for i in attrIdx]
-	for attr in attrDel:
-		df = df.drop(attr)
-	return df
-
 def fixColumnName(dt):
 	# Input: 
 	#  - dt : dataframe	
@@ -53,8 +42,11 @@ def deleteNullAttr(dt):
 		attrFu.append(dt.filter(dt[colName].like("%Unspecified%")).count()/totL)
 	
 	attrIdx = list(set().union([x[0] for x in enumerate(attrFn) if x[1] > 0.9],[x[0] for x in enumerate(attrFu) if x[1] > 0.9]))
-	df = deleteColumn(attrIdx, dt)
-	return df
+	#df = deleteColumn(attrIdx, dt)
+	attrDel = [dt.columns[i] for i in attrIdx]
+	for attr in attrDel:
+		dt = dt.drop(attr)
+	return dt
 
 def dateTranform(dt, dateAttr):
 	# Input: 
