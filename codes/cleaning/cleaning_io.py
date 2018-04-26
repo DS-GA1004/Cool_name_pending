@@ -48,29 +48,17 @@ def deleteNullAttr(dt):
 		dt = dt.drop(attr)
 	return dt
 
-def dateTranform(dt, dateAttr):
+
+def zipcodeFilter(dt, zipAttr):
 	# Input: 
 	#  - df : dataframe	
-	#  - dateAttr : string name of date attribute (column)
-
-	# Date into date format
-	dt = dt.withColumn('yymmdd', to_date(from_unixtime(unix_timestamp(dateAttr, 'MM/dd/yyy')))).drop(dateAttr)
-	# Date into day only
-	dt = dt.withColumn('day', dayofmonth("yymmdd"))
-	# Date into month only
-	dt = dt.withColumn('month', month("yymmdd"))
-	# Date into year only
-	dt = dt.withColumn('year', year("yymmdd"))
-	return dt
-
-def timeTranform(dt, timeAttr):
-	# Input: 
-	#  - df : dataframe	
-	#  - timeAttr : string name of time attribute (column)
-
-	# Map time (HH:MM) into 24 hours
-	dt = dt.withColumn('time24',split(col(timeAttr), ':')[0].cast("int")).drop(timeAttr)
-	return dt
+	#  - zipAttr : string name of zip code attribute (column)
+	df = dt.withColumn('zipcode', substring(dt[zipAttr], 1, 5)).drop(zipAttr)
+	nyc_zips = spark.read.format('csv').options(header='true', inferschema='true').load("file:///home/hk2451/project/Cool_name_pending/codes/cleaning/nyc_zip_code.csv")
+	df.createOrReplaceTempView("whole")
+	nyc_zips.createOrReplaceTempView("nyc_zips")
+	df2 = spark.sql("SELECT * FROM whole WHERE whole.zipcode in (SELECT zipcode FROM nyc_zips)")
+	return df2
 
 
 
