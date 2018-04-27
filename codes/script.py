@@ -5,15 +5,15 @@ import sys
 import numpy as np
 from csv import reader
 from pyspark.sql import SparkSession
-from pyspark.sql import SQLContext, SparkConf
+from pyspark.sql import SQLContext
 from pyspark.sql.functions import *
 from pyspark.sql.types import StringType, StructType, StructField
 from pyspark.sql.functions import col
 from pyspark import SparkFiles
-import datetime
 
-sc.addFile("/home/hk2451/project/Cool_name_pending/codes/cleaning/cleaning_io.py")
-#SparkFiles.get("/home/hk2451/project/Cool_name_pending/codes/cleaning/cleaning_io.py")
+import datetime
+SparkFiles.get("/home/hk2451/project/Cool_name_pending/codes/cleaning/cleaning_io.py")
+#sc.addFile("/home/hk2451/project/Cool_name_pending/codes/cleaning/cleaning_io.py")
 import cleaning_io as clean
 
 dt1 = spark.read.format('csv').options(header='true',inferschema='true').load("file:///home/hk2451/project/data/311/311_Service_Requests_from_2010_to_Present.csv")
@@ -90,11 +90,6 @@ dfJoinF.count()
 
 dfJoinF.createOrReplaceTempView("DT")
 spark.sql("SELECT * FROM DT").coalesce(1).write.save("/home/hk2451/project/data/join_yymmdd_2012", format="csv")
-
-
-
-
-
 
 
 
