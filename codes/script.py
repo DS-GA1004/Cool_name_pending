@@ -85,11 +85,13 @@ for colab in colAB:
 	dfJoin = dfJoin.drop(colab,colab+'A')
 
 # Select year
-dfJoinF = dfJoin.filter(col('yymmdd') == 2012)
-dfJoinF.count()
+dfJoinF12 = dfJoin.filter(col('year') == 2012)
+dfJoinF12.count()
 
-dfJoinF.createOrReplaceTempView("DT")
-spark.sql("SELECT * FROM DT").coalesce(1).write.save("/home/hk2451/project/data/join_yymmdd_2012", format="csv")
+dfJoinF12.createOrReplaceTempView("DT")
+spark.sql("SELECT * FROM DT").coalesce(1).write.save("file:///home/hk2451/project/data/join_year_2012", format="csv")
+
+spark.sql("SELECT * FROM DT").coalesce(1).write.save("join_year_2012", format="csv")
 
 
 
