@@ -89,8 +89,6 @@ dfJoinF12 = dfJoin.filter(col('year') == 2012)
 dfJoinF12.count()
 
 dfJoinF12.createOrReplaceTempView("DT")
-spark.sql("SELECT * FROM DT").coalesce(1).write.save("file:///home/hk2451/project/data/join_year_2012", format="csv")
-
 spark.sql("SELECT * FROM DT").coalesce(1).write.save("join_year_2012", format="csv")
 
 
