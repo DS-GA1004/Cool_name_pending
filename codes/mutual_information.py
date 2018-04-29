@@ -2,7 +2,6 @@
 
 # - import common modules
 import sys
-import numpy as np
 from csv import reader
 from pyspark.sql import SparkSession
 from pyspark.sql import SQLContext
@@ -11,22 +10,47 @@ from pyspark.sql.types import StringType, StructType, StructField
 from pyspark.sql.functions import col
 import datetime
 
+def mutual_information(dt, attr1, attr2, uniqueAttr,saveFlag,saveName):	
+	"""Mutual information calculation function
 
-def mutual_information(dt, attr1, attr2):	
-	attrIn1 = dt.select(attr1).distinct().rdd.flatMap(lambda x: x).collect()
-	attrIn2 = dt.select(attr2).distinct().rdd.flatMap(lambda x: x).collect()
+	Args:
+	dt (DataFrame): DataFrame contains attributes
+	attr1 (str): Attribute name
+	attr2 (str): Attribute name
+	saveFlag (bool): If you want to save for details, select "True"
+	saveName (str): DataFrame contains attribute pair, pX, pY, pXY, and MI values will be saved under "saveName"
+
+	Returns:
+	Mutual information value
+
+	"""
+
 	totalRow = dt.count()
-	pXY = np.zeros((len(attrIn1), len(attrIn2)))
-	pX = np.zeros((len(attrIn1),1))
-	pY = np.zeros((len(attrIn2), 1))
-	for i in range(0,len(attrIn1)):
-		for j in range(i,len(attrIn2)):
-			pXY[i][j] = (dt.filter(dt[attr1] == attrIn1[i]).filter(dt[attr2] == attrIn2[j]).count())/totalRow
-	for i in range(0,len(attrIn1)):
-	    pX[i] = (dt.filter(dt[attr1] == attrIn1[i]).count())/totalRow
-	for i in range(0,len(attrIn2)):
-	    pY[i] = (dt.filter(dt[attr2] == attrIn2[i]).count())/totalRow
-	pXpY = pX.dot(pY.transpose())
-	mask = pXY != 0
-	MI = np.sum(np.multiply(pXY[mask], np.log(np.divide(pXY[mask], pXpY[mask]))))
-	return pXY, pXpY, MI
+	nC1 = [attr1, "count"]
+	nC2 = [attr2, "count"]
+	nC3 = [attr1,attr2,"count"]
+	# Count for attribute 1
+	xx = dt.groupBy(attr1).agg(countDistinct(uniqueAttr)).toDF(*nC1).withColumn("pX", (col("count"))/(totalRow))
+	# Count for attribute 2
+	yy = dt.groupBy(attr2).agg(countDistinct(uniqueAttr)).toDF(*nC2).withColumn("pY", (col("count"))/(totalRow))
+	# Count for co-existing rows for attrbute 1 and attribute 2
+	xy = dt.groupBy(attr1,attr2).agg(countDistinct(uniqueAttr)).toDF(*nC3).withColumn("pXY", (col("count"))/(totalRow))
+
+	# Join to get attribute pairs' matching pXY, pX, pY
+	a = xy.alias('a')
+	b = xx.alias('b')
+	c = yy.alias('c')
+	xy_x = a.join(b, col('a.'+attr1) == col('b.'+attr1), 'inner').select(col('a.'+attr1),col('a.'+attr2),col('a.'+'pXY'),col('b.'+'pX'))
+	d = xy_x.alias('d')
+	xy_xy = d.join(c, col('d.'+attr2) == col('c.'+attr2), 'inner').select(col('d.'+attr1),col('d.'+attr2),col('d.'+'pXY'),col('d.'+'pX'),col('c.'+'pY'))
+
+	# Calculate mutual information
+	xy_xy = xy_xy.withColumn("MI", (col("pXY") * log(col("pXY") / (col("pX") * col("pY")))))
+
+	if saveFlag == True:
+		# Save dataframe with pX, pY, pXY for later use
+		xy_xy.write.format("com.databricks.spark.csv").option("header", "true").option("delimiter",",").save(saveName)
+
+	# Return mutual information result between attribute 1 and attribute 2
+	return xy_xy.select(col("MI")).rdd.map(lambda x: x[0]).sum()
+	
