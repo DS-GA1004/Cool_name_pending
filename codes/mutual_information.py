@@ -30,11 +30,11 @@ def mutual_information(dt, attr1, attr2, uniqueAttr,saveFlag,saveName):
 	nC2 = [attr2, "count"]
 	nC3 = [attr1,attr2,"count"]
 	# Count for attribute 1
-	xx = dt.select(attr1).groupBy(attr1).agg(countDistinct(uniqueAttr)).toDF(*nC1).withColumn("pX", (col("count"))/(totalRow))
+	xx = dt.select(attr1,uniqueAttr).groupBy(attr1).agg(countDistinct(uniqueAttr)).toDF(*nC1).withColumn("pX", (col("count"))/(totalRow))
 	# Count for attribute 2
-	yy = dt.select(attr2).groupBy(attr2).agg(countDistinct(uniqueAttr)).toDF(*nC2).withColumn("pY", (col("count"))/(totalRow))
+	yy = dt.select(attr2,uniqueAttr).groupBy(attr2).agg(countDistinct(uniqueAttr)).toDF(*nC2).withColumn("pY", (col("count"))/(totalRow))
 	# Count for co-existing rows for attrbute 1 and attribute 2
-	xy = dt.select(attr1,attr2).groupBy(attr1,attr2).agg(countDistinct(uniqueAttr)).toDF(*nC3).withColumn("pXY", (col("count"))/(totalRow))
+	xy = dt.select(attr1,attr2,uniqueAttr).groupBy(attr1,attr2).agg(countDistinct(uniqueAttr)).toDF(*nC3).withColumn("pXY", (col("count"))/(totalRow))
 
 	# Join to get attribute pairs' matching pXY, pX, pY
 	a = xy.alias('a')
