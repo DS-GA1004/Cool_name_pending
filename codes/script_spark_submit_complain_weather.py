@@ -53,7 +53,6 @@ for colab in colAB:
 # find common name column and change it 
 
 years = dfJoin.select('year').distinct().rdd.map(lambda x: x[0]).collect()
-years.remove(2012)
 
 for k in range(0, len(years)):
         dfJoin = dfJoin.filter(col('year') == years[k])
