@@ -40,13 +40,6 @@ def process(filename, output):
 	for colName in df.columns:
 		attrF.append(df.filter(df[colName].like("%Unspecified%")).count()/totL)
 	df = delete_useless_column(attrF, df, 0.9)
-	# Delete columns w/o description
-	if ("property" in filename):
-		df2 = df.drop('owner', 'ltfront', 'ltdep', 'fullval', 'AVLAND', 'AVTOT', 'EXLAND', 'EXTOT', 'staddr', 'avland2', 'avtot2', 'extot2', 'year')
-		df2 = df2.drop('valtype', 'period')
-		df2 = df2.withColumn('stories_floor', floor(df2.stories)).drop('stories')
-		df2 = df2.withColumn('excd1_floor', floor(df2.excd1)).drop('excd1')
-		df2 = df2.withColumn('unique_key', df2.bble).drop('bble')
 	# Date Transformation
 	if ("weather" in filename):
 		# weather data
@@ -59,6 +52,15 @@ def process(filename, output):
 		df2 = df.withColumn("yymmdd", to_date(from_unixtime(unix_timestamp('year', 'yyyy/mm'))))
 	else:
 		df2 = df.withColumn('yymmdd', to_date(from_unixtime(unix_timestamp('date', 'MM/dd/yyyy')))).drop('date')
+	# Delete columns w/o description
+	if ("property" in filename):
+		# Delete attrs with too many categories
+		df2 = df2.drop('block', 'lot', 'ltdepth', 'owner', 'ltfront', 'ltdep', 'fullval', 'AVLAND', 'AVTOT', 'EXLAND', 'EXTOT', 'staddr', 'avland2', 'avtot2', 'extot2', 'year')
+		# Delete attrs that most data has the same category value
+		df2 = df2.drop('valtype', 'period')
+		df2 = df2.withColumn('stories_floor', floor(df2.stories)).drop('stories')
+		df2 = df2.withColumn('excd1_floor', floor(df2.excd1)).drop('excd1')
+		df2 = df2.withColumn('unique_key', df2.bble).drop('bble')
 	# Map time (HH:MM) into 24 hours
 	if ("311" in filename):
 		df2 = df2.withColumn('time24', when(split(col("time"), " ")[1]=="AM", split(col("time"), ':')[0].cast("int")).otherwise(split(col("time"), ':')[0].cast("int")+12))

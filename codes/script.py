@@ -123,14 +123,11 @@ if ("weather" in filename):
 	# weather data
 	df2 = df.withColumn('date', col('date').cast(StringType()))
 	df2 = df2.withColumn('yymmdd', to_date(from_unixtime(unix_timestamp('date', 'yyyymmdd')))).drop('date')
-
-else if ("311" in filename):
+elif ("311" in filename):
 	df2 = df.withColumn('yymmdd', to_date(from_unixtime(unix_timestamp('created_date', 'MM/dd/yyyy'))))
 	df2 = df2.withColumn('time', col('created_date').substr(12, 11)).drop("created_date")
-
-else if ("property" in filename):
+elif ("property" in filename):
 	df2 = df.withColumn("yymmdd", to_date(from_unixtime(unix_timestamp('year', 'yyyy/mm'))))
-
 else:
 	df2 = df.withColumn('yymmdd', to_date(from_unixtime(unix_timestamp('date', 'MM/dd/yyyy')))).drop('date')
 
@@ -138,24 +135,18 @@ else:
 if ("311" in filename):
 	df2 = df2.withColumn('time24', when(split(col("time"), " ")[1]=="AM", split(col("time"), ':')[0].cast("int")).otherwise(split(col("time"), ':')[0].cast("int")+12))
 	df2 = df2.drop("time")
-
 if ("weather" in filename):
 	df2 = df2.withColumn('time24', floor(df2.time/100) ).drop('time')
-	
-else if ("property" not in filename):
+elif ("property" not in filename):
 	df2 = df2.withColumn('time24',split(col("time"), ':')[0].cast("int")).drop('time')
-
 
 # Date into day only
 if ("property" not in filename):
 	df2 = df2.withColumn('day', dayofmonth("yymmdd"))
-
 # Date into month only
 df2 = df2.withColumn('month', month("yymmdd"))
-
 # Date into year only
 df2 = df2.withColumn('year', year("yymmdd"))
-
 
 # Additional file cleaning (file specific)
 if ("weather" in filename):
@@ -165,6 +156,14 @@ if ("weather" in filename):
 	df2 = df2.withColumn('temp_floor',floor(df2.temp)).drop('temp')
 	df2 = df2.withColumn('prcp_floor',floor(df2.prcp)).drop('prcp')
 	df2 = df2.filter(df2.visb != '      ')
+if ("property" in filename):
+	# Delete attrs with too many categories
+	df2 = df2.drop('block', 'lot', 'ltdepth', 'owner', 'ltfront', 'ltdep', 'fullval', 'AVLAND', 'AVTOT', 'EXLAND', 'EXTOT', 'staddr', 'avland2', 'avtot2', 'extot2', 'year')
+	# Delete attrs that most data has the same category value
+	df2 = df2.drop('valtype', 'period')
+	df2 = df2.withColumn('stories_floor', floor(df2.stories)).drop('stories')
+	df2 = df2.withColumn('excd1_floor', floor(df2.excd1)).drop('excd1')
+	df2 = df2.withColumn('unique_key', df2.bble).drop('bble')
 
 df2.write.format("com.databricks.spark.csv").option("header", "true").option("delimiter",",").save("weather_cleaned")
 
