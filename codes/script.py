@@ -292,6 +292,46 @@ df1 = df1.withColumnRenamed('id','unique_key')
 
 df1.write.format("com.databricks.spark.csv").option("header", "true").option("delimiter",",").save("bike_cleaned"+str(yearIdx))
 
+##################################
+# cleaning : crime
+##################################
+dt = spark.read.format('csv').options(header='true',inferschema='true').load("/user/jn1664/nyc_data/crim_zip/NYPD_Complaint_Data_Historic.csv")
+
+df1 = clean.fixColumnName(dt)
+df1 = clean.zipcodeFilter(df1, 'zip')
+
+# We have zip code -> delete coordinate id
+df1 = df1.drop('x_coord_cd','y_coord_cd')
+
+# Rename id -> unique_key
+df1 = df1.withColumnRenamed('id','unique_key')
+
+# Remove randomly generated complaint number
+df1 = df1.drop('cmplnt_num')
+
+# Remove descriptions since we have codes
+df1 = df1.drop('ofns_desc','pd_desc')
+
+# Delete attribute with "collecting if cases"
+df1 = df1.drop('parks_nm','hadevelopt')
+
+# Crime duration does not make sense -> delete
+df1 = df1.drop('cmplnt_to_dt','cmplnt_to_tm','rpt_dt')
+
+# Date complain started
+df1 = df1.withColumn('yymmdd', to_date(from_unixtime(unix_timestamp('cmplnt_fr_dt', 'MM/dd/yyyy')))).drop('cmplnt_fr_dt')
+
+# Day only
+df1 = df1.withColumn('day', dayofmonth("yymmdd"))
+# Date into month only
+df1 = df1.withColumn('month', month("yymmdd"))
+# Date into year only
+df1 = df1.withColumn('year', year("yymmdd"))
+
+# Time 
+df1 = df1.withColumn('time24', split(col("cmplnt_fr_tm"),':')[0].cast("int")).drop("cmplnt_fr_tm")
+
+df1.write.format("com.databricks.spark.csv").option("header", "true").option("delimiter",",").save("crime_cleaned")
 
 ##################################
 # Inner Join and filter by year
@@ -339,4 +379,9 @@ MI = mi.mutual_information(dt, attr1, attr2, uniqueAttr,saveFlag,saveName)
 
 # If you don't need to save it
 MI = mi.mutual_information(dt, attr1, attr2, uniqueAttr,0,saveName)
+
+
+
+
+
 
