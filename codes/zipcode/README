@@ -1,0 +1,11 @@
+1. how to run
+	./run.sh dataset_num date(in the shape for each dataset)
+	ex for citibike) ./run.sh 1 201803
+	ex for taxi)     ./run.sh 2 2012-01
+      ./run_addZip_all.sh dataset_num date(in the shape for each dataset)
+      ex for citibike) ./run_addZip_all.sh 1 201803
+	ex for taxi)     ./run_addZip_all.sh 2 2012-01
+2. dataset_num
+	1:citibike
+	2:taxi
+	3:crime
