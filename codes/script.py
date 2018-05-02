@@ -12,6 +12,7 @@ from pyspark.sql.functions import col
 from pyspark import SparkFiles
 import datetime
 
+
 sc.addFile("/home/hk2451/project/Cool_name_pending/codes/cleaning/cleaning_io.py")
 sc.addFile("/home/hk2451/project/Cool_name_pending/codes/mutual_information.py")
 #SparkFiles.get("file:///home/hk2451/project/Cool_name_pending/codes/cleaning/cleaning_io.py")
@@ -123,11 +124,14 @@ if ("weather" in filename):
 	# weather data
 	df2 = df.withColumn('date', col('date').cast(StringType()))
 	df2 = df2.withColumn('yymmdd', to_date(from_unixtime(unix_timestamp('date', 'yyyymmdd')))).drop('date')
-elif ("311" in filename):
+
+else if ("311" in filename):
 	df2 = df.withColumn('yymmdd', to_date(from_unixtime(unix_timestamp('created_date', 'MM/dd/yyyy'))))
 	df2 = df2.withColumn('time', col('created_date').substr(12, 11)).drop("created_date")
-elif ("property" in filename):
+
+else if ("property" in filename):
 	df2 = df.withColumn("yymmdd", to_date(from_unixtime(unix_timestamp('year', 'yyyy/mm'))))
+
 else:
 	df2 = df.withColumn('yymmdd', to_date(from_unixtime(unix_timestamp('date', 'MM/dd/yyyy')))).drop('date')
 
@@ -135,18 +139,24 @@ else:
 if ("311" in filename):
 	df2 = df2.withColumn('time24', when(split(col("time"), " ")[1]=="AM", split(col("time"), ':')[0].cast("int")).otherwise(split(col("time"), ':')[0].cast("int")+12))
 	df2 = df2.drop("time")
+
 if ("weather" in filename):
 	df2 = df2.withColumn('time24', floor(df2.time/100) ).drop('time')
-elif ("property" not in filename):
+	
+else if ("property" not in filename):
 	df2 = df2.withColumn('time24',split(col("time"), ':')[0].cast("int")).drop('time')
+
 
 # Date into day only
 if ("property" not in filename):
 	df2 = df2.withColumn('day', dayofmonth("yymmdd"))
+
 # Date into month only
 df2 = df2.withColumn('month', month("yymmdd"))
+
 # Date into year only
 df2 = df2.withColumn('year', year("yymmdd"))
+
 
 # Additional file cleaning (file specific)
 if ("weather" in filename):
@@ -156,14 +166,6 @@ if ("weather" in filename):
 	df2 = df2.withColumn('temp_floor',floor(df2.temp)).drop('temp')
 	df2 = df2.withColumn('prcp_floor',floor(df2.prcp)).drop('prcp')
 	df2 = df2.filter(df2.visb != '      ')
-if ("property" in filename):
-	# Delete attrs with too many categories
-	df2 = df2.drop('block', 'lot', 'ltdepth', 'owner', 'ltfront', 'ltdep', 'fullval', 'AVLAND', 'AVTOT', 'EXLAND', 'EXTOT', 'staddr', 'avland2', 'avtot2', 'extot2', 'year')
-	# Delete attrs that most data has the same category value
-	df2 = df2.drop('valtype', 'period')
-	df2 = df2.withColumn('stories_floor', floor(df2.stories)).drop('stories')
-	df2 = df2.withColumn('excd1_floor', floor(df2.excd1)).drop('excd1')
-	df2 = df2.withColumn('unique_key', df2.bble).drop('bble')
 
 df2.write.format("com.databricks.spark.csv").option("header", "true").option("delimiter",",").save("weather_cleaned")
 
@@ -171,23 +173,165 @@ df2.write.format("com.databricks.spark.csv").option("header", "true").option("de
 ##################################
 # cleaning : taxi
 ##################################
-dt = spark.read.format('csv').options(header='true',inferschema='true').load("file:///home/hk2451/project/data/taxi/yellow_tripdata_2017-01.csv")
-# Trip duration
-timeFmt = "yyyy-MM-dd'T'HH:mm:ss.SSS"
-dt = dt.withColumn('tripTime',unix_timestamp(dt.tpep_dropoff_datetime,format=timeFmt)-unix_timestamp(dt.tpep_pickup_datetime,format=timeFmt))
-dt = dt.drop('tpep_dropoff_datetime')
+yearIdx = 2010
+
+dt1 = spark.read.format('csv').options(header='true',inferschema='true').load("/user/jn1664/nyc_data/taxi_zip/yello_tripdata_"+str(yearIdx)+"-01.csv").union(spark.read.format('csv').options(header='true',inferschema='true').load("/user/jn1664/nyc_data/taxi_zip/yello_tripdata_"+str(yearIdx)+"-02.csv")).union(spark.read.format('csv').options(header='true',inferschema='true').load("/user/jn1664/nyc_data/taxi_zip/yello_tripdata_"+str(yearIdx)+"-03.csv")).union(spark.read.format('csv').options(header='true',inferschema='true').load("/user/jn1664/nyc_data/taxi_zip/yello_tripdata_"+str(yearIdx)+"-04.csv"))
+dt2 = spark.read.format('csv').options(header='true',inferschema='true').load("/user/jn1664/nyc_data/taxi_zip/yello_tripdata_"+str(yearIdx)+"-05.csv").union(spark.read.format('csv').options(header='true',inferschema='true').load("/user/jn1664/nyc_data/taxi_zip/yello_tripdata_"+str(yearIdx)+"-06.csv")).union(spark.read.format('csv').options(header='true',inferschema='true').load("/user/jn1664/nyc_data/taxi_zip/yello_tripdata_"+str(yearIdx)+"-07.csv")).union(spark.read.format('csv').options(header='true',inferschema='true').load("/user/jn1664/nyc_data/taxi_zip/yello_tripdata_"+str(yearIdx)+"-08.csv"))
+dt3 = spark.read.format('csv').options(header='true',inferschema='true').load("/user/jn1664/nyc_data/taxi_zip/yello_tripdata_"+str(yearIdx)+"-09.csv").union(spark.read.format('csv').options(header='true',inferschema='true').load("/user/jn1664/nyc_data/taxi_zip/yello_tripdata_"+str(yearIdx)+"-10.csv")).union(spark.read.format('csv').options(header='true',inferschema='true').load("/user/jn1664/nyc_data/taxi_zip/yello_tripdata_"+str(yearIdx)+"-11.csv")).union(spark.read.format('csv').options(header='true',inferschema='true').load("/user/jn1664/nyc_data/taxi_zip/yello_tripdata_"+str(yearIdx)+"-12.csv"))
+
+dt = dt1.union(dt2).union(dt3)
+
+df1 = clean.fixColumnName(dt)
+#df1 = clean.deleteNullAttr(df1)
+df1 = clean.zipcodeFilter(df1, 'start_zip')
+df1 = df1.withColumn('startZipcode',df1.zipcode).drop('zipcode')
+df1 = clean.zipcodeFilter(df1, 'end_zip')
+df1 = df1.withColumn('endZipcode',df1.zipcode).drop('zipcode')
+
+# Trip duration (By minitues and categorized by every 10 min)
+if yearIdx in [2010]:
+	timeFmt = "yyyy-MM-dd'T'HH:mm:ss.SSS"
+	df1 = df1.withColumn('tripTime',floor((unix_timestamp(df1.dropoff_datetime,format=timeFmt)-unix_timestamp(df1.pickup_datetime,format=timeFmt))/600))
+	df1 = df1.drop('dropoff_datetime')
+
+if yearIdx in [2017]:
+	timeFmt = "yyyy-MM-dd'T'HH:mm:ss.SSS"
+	df1 = df1.withColumn('tripTime',floor((unix_timestamp(df1.tpep_dropoff_datetime,format=timeFmt)-unix_timestamp(df1.tpep_pickup_datetime,format=timeFmt))/600))
+	df1 = df1.drop('tpep_dropoff_datetime')
 
 # Pickup datetime as date / time
-dt = dt.withColumn('yymmdd', to_date(from_unixtime(unix_timestamp('tpep_pickup_datetime', 'MM/dd/yyyy'))))
-# Day only
-dt = dt.withColumn('day', dayofmonth("yymmdd"))
-# Date into month only
-dt = dt.withColumn('month', month("yymmdd"))
-# Date into year only
-dt = dt.withColumn('year', year("yymmdd"))
-# Time in 24 
-dt = dt.withColumn('time24', date_format(from_unixtime(unix_timestamp('tpep_pickup_datetime')), 'HH')).drop('tpep_pickup_datetime')
+if yearIdx in [2010]:
+	df1 = df1.withColumn('yymmdd', to_date(from_unixtime(unix_timestamp('pickup_datetime', 'MM/dd/yyyy'))))
 
+if yearIdx in [2017]:
+	df1 = df1.withColumn('yymmdd', to_date(from_unixtime(unix_timestamp('tpep_pickup_datetime', 'MM/dd/yyyy'))))
+
+# Day only
+df1 = df1.withColumn('day', dayofmonth("yymmdd"))
+# Date into month only
+df1 = df1.withColumn('month', month("yymmdd"))
+# Date into year only
+df1 = df1.withColumn('year', year("yymmdd"))
+
+# Time in 24 
+if yearIdx in [2010]:
+	df1 = df1.withColumn('time24', date_format(from_unixtime(unix_timestamp('pickup_datetime')), 'HH')).drop('pickup_datetime')
+if yearIdx in [2017]:
+	df1 = df1.withColumn('time24', date_format(from_unixtime(unix_timestamp('tpep_pickup_datetime')), 'HH')).drop('tpep_pickup_datetime')
+
+# Drop store and fwd flag (~50%)
+df1 = df1.drop('store_and_fwd_flag')
+
+# Change the tip in percentage and cateogorize it 
+df1 = df1.withColumn('tipAmount',floor(df1.tip_amount*10/df1.fare_amount)).drop('tip_amount')
+# Trip distance / prices categorizing
+df1 = df1.withColumn('tripDistance',floor(df1.trip_distance)).drop('trip_distance')
+df1 = df1.withColumn('fareAmount',floor(df1.trip_distance/10)).drop('fare_amount')
+df1 = df1.withColumn('tollsAmount',floor(df1.tolls_amount)).drop('tolls_amount')
+df1 = df1.withColumn('totalAmount',floor(df1.total_amount/10)).drop('total_amount')
+df1 = df1.withColumn('surCharge',floor(df1.surcharge*10)).drop('surcharge')
+
+df1 = df1.withColumnRenamed('id','unique_key')
+
+df1.write.format("com.databricks.spark.csv").option("header", "true").option("delimiter",",").save("bike_cleaned"+str(yearIdx))
+
+##################################
+# cleaning : bike
+##################################
+yearIdx = 2013
+
+dt1 = spark.read.format('csv').options(header='true',inferschema='true').load("/user/jn1664/nyc_data/bike_zip/"+str(yearIdx)+"01-citibike-tripdata.csv").union(spark.read.format('csv').options(header='true',inferschema='true').load("/user/jn1664/nyc_data/bike_zip/"+str(yearIdx)+"02-citibike-tripdata.csv")).union(spark.read.format('csv').options(header='true',inferschema='true').load("/user/jn1664/nyc_data/bike_zip/"+str(yearIdx)+"03-citibike-tripdata.csv")).union(spark.read.format('csv').options(header='true',inferschema='true').load("/user/jn1664/nyc_data/bike_zip/"+str(yearIdx)+"04-citibike-tripdata.csv"))
+dt2 = spark.read.format('csv').options(header='true',inferschema='true').load("/user/jn1664/nyc_data/bike_zip/"+str(yearIdx)+"05-citibike-tripdata.csv").union(spark.read.format('csv').options(header='true',inferschema='true').load("/user/jn1664/nyc_data/bike_zip/"+str(yearIdx)+"06-citibike-tripdata.csv")).union(spark.read.format('csv').options(header='true',inferschema='true').load("/user/jn1664/nyc_data/bike_zip/"+str(yearIdx)+"07-citibike-tripdata.csv")).union(spark.read.format('csv').options(header='true',inferschema='true').load("/user/jn1664/nyc_data/bike_zip/"+str(yearIdx)+"08-citibike-tripdata.csv"))
+dt3 = spark.read.format('csv').options(header='true',inferschema='true').load("/user/jn1664/nyc_data/bike_zip/"+str(yearIdx)+"09-citibike-tripdata.csv").union(spark.read.format('csv').options(header='true',inferschema='true').load("/user/jn1664/nyc_data/bike_zip/"+str(yearIdx)+"10-citibike-tripdata.csv")).union(spark.read.format('csv').options(header='true',inferschema='true').load("/user/jn1664/nyc_data/bike_zip/"+str(yearIdx)+"11-citibike-tripdata.csv")).union(spark.read.format('csv').options(header='true',inferschema='true').load("/user/jn1664/nyc_data/bike_zip/"+str(yearIdx)+"12-citibike-tripdata.csv"))
+dt = dt1.union(dt2).union(dt3)
+
+df1 = clean.fixColumnName(dt)
+df1 = clean.zipcodeFilter(df1, 'start_zip')
+df1 = df1.withColumn('startZipcode',df1.zipcode).drop('zipcode')
+df1 = clean.zipcodeFilter(df1, 'end_zip')
+df1 = df1.withColumn('endZipcode',df1.zipcode).drop('zipcode')
+
+# Trip duration (By minitues and categorized by every 10 min)
+if yearIdx in [2018, 2015,2014,2016,2017,2013]:
+	df1 = df1.withColumn('tripTime',floor(df1.tripduration/(60*10))).drop('tripduration').drop('stopTime')
+if yearIdx in [2017]:
+	df1 = df1.withColumn('tripTime',floor(df1.trip_duration/(60*10))).drop('trip_duration').drop('stop_time')
+
+# Pickup datetime as date / time
+if yearIdx in [2018, 2015, 2016,2017,2013]:
+	df1 = df1.withColumn('yymmdd', to_date(from_unixtime(unix_timestamp('starttime', 'MM/dd/yyyy'))))
+if yearIdx in [2017]:
+	df1 = df1.withColumn('yymmdd', to_date(from_unixtime(unix_timestamp('start_time', 'MM/dd/yyyy'))))
+if yearIdx in [2014]:
+	df1 = df1.withColumn('yymmdd',to_date(from_unixtime(unix_timestamp('starttime'))))
+
+# Day only
+df1 = df1.withColumn('day', dayofmonth("yymmdd"))
+# Date into month only
+df1 = df1.withColumn('month', month("yymmdd"))
+# Date into year only
+df1 = df1.withColumn('year', year("yymmdd"))
+# Time in 24 
+if yearIdx in [2018,2013]:
+	df1 = df1.withColumn('time24', date_format(from_unixtime(unix_timestamp('starttime')), 'HH')).drop('starttime')
+if yearIdx in [2017]:
+	df1 = df1.withColumn('time24', date_format(from_unixtime(unix_timestamp('start_time')), 'HH')).drop('start_time')
+if yearIdx in [2015,2014,2016]:
+	df1 = df1.withColumn('time24', split(split(col("starttime"),' ')[1],':')[0].cast("int")).drop('starttime')
+
+# Age using birth year (Child:0,Teen:1, 20s:2, 30s:3..)
+df1 = df1.withColumn('age',floor((yearIdx-df1.birth_year)/10)).drop('birth_year')
+
+# station related info attributes are dropped since we have zip
+df1 = df1.drop('bikeid','start_station_name','end_station_name','start_station_id','end_station_id')
+if yearIdx in [2017]:
+	df1 = df1.drop('bike_id')
+
+# Change name of id -> unique_key
+df1 = df1.withColumnRenamed('id','unique_key')
+
+df1.write.format("com.databricks.spark.csv").option("header", "true").option("delimiter",",").save("bike_cleaned"+str(yearIdx))
+
+##################################
+# cleaning : crime
+##################################
+dt = spark.read.format('csv').options(header='true',inferschema='true').load("/user/jn1664/nyc_data/crim_zip/NYPD_Complaint_Data_Historic.csv")
+
+df1 = clean.fixColumnName(dt)
+df1 = clean.zipcodeFilter(df1, 'zip')
+
+# We have zip code -> delete coordinate id
+df1 = df1.drop('x_coord_cd','y_coord_cd')
+
+# Rename id -> unique_key
+df1 = df1.withColumnRenamed('id','unique_key')
+
+# Remove randomly generated complaint number
+df1 = df1.drop('cmplnt_num')
+
+# Remove descriptions since we have codes
+df1 = df1.drop('ofns_desc','pd_desc')
+
+# Delete attribute with "collecting if cases"
+df1 = df1.drop('parks_nm','hadevelopt')
+
+# Crime duration does not make sense -> delete
+df1 = df1.drop('cmplnt_to_dt','cmplnt_to_tm','rpt_dt')
+
+# Date complain started
+df1 = df1.withColumn('yymmdd', to_date(from_unixtime(unix_timestamp('cmplnt_fr_dt', 'MM/dd/yyyy')))).drop('cmplnt_fr_dt')
+
+# Day only
+df1 = df1.withColumn('day', dayofmonth("yymmdd"))
+# Date into month only
+df1 = df1.withColumn('month', month("yymmdd"))
+# Date into year only
+df1 = df1.withColumn('year', year("yymmdd"))
+
+# Time 
+df1 = df1.withColumn('time24', split(col("cmplnt_fr_tm"),':')[0].cast("int")).drop("cmplnt_fr_tm")
+
+df1.write.format("com.databricks.spark.csv").option("header", "true").option("delimiter",",").save("crime_cleaned")
 
 ##################################
 # Inner Join and filter by year
@@ -215,6 +359,10 @@ dfJoinF12 = dfJoin.filter(col('year') == 2012)
 dfJoinF12.count()
 
 dfJoinF12.write.format("com.databricks.spark.csv").option("header", "true").option("delimiter",",").save("join_year_2012_2")
+
+
+
+
 
 ##################################
 # Mutual Information
