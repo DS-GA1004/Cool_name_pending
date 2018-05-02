@@ -40,7 +40,7 @@ if __name__=="__main__":
         #3. change column names
         #"tripduration","starttime","stoptime","start station id","start station name","start station latitude","start station longitude","end station id","end station name","end station latitude","end station longitude","bikeid","name_localizedValue0","usertype","birth year","gender"
         #Trip Duration,Start Time,Stop Time,Start Station ID,Start Station Name,Start Station Latitude,Start Station Longitude,End Station ID,End Station Name,End Station Latitude,End Station Longitude,Bike ID,User Type,Birth Year,Gender
-        if '201610' or '201701' or '201702' or '201703' in sys.argv[2]:
+        if ('201610' in sys.argv[2]) or ('201701' in sys.argv[2]) or ('201702' in sys.argv[2]) or ('201703' in sys.argv[2]):
             ori_data = ori_data.select(F.col("_1.Trip Duration").alias("Trip Duration"), F.col("_1.Start Time").alias("Start Time"), F.col("_1.Stop Time").alias("Stop Time"),F.col("_1.Start Station ID").alias("Start Station ID"), F.col("_1.Start Station Name").alias("Start Station Name"), F.col("_1.End Station ID").alias("End Station ID"), F.col("_1.End Station Name").alias("End Station Name"), F.col("_1.Bike ID").alias("Bike ID"), F.col("_1.User Type").alias("User Type"), F.col("_1.Birth Year").alias("Birth Year"), F.col("_1.Gender").alias("Gender"), F.col("_2").alias("id"))
 
         else:
