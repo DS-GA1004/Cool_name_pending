@@ -42,8 +42,11 @@ def process(df1, df2, year):
         dfJoin = a.join(b, a.yymmddA == b.yymmdd, 'inner').select([col('a.'+xx) for xx in a.columns] + [col('b.'+xx) for xx in b.columns])
         # Delete duplicated columns
 
-        for colab in colAB:
-        	dfJoin = dfJoin.drop(colab+'A')
+        colDel = ['yymmdd','day','month','year','unique_key']
+        for colab in colDel:
+                dfJoin = dfJoin.drop(colab+'A')
+        # for colab in colAB:
+        # 	dfJoin = dfJoin.drop(colab+'A')
 
 ##################################
 # Mutual information (Year by year)
@@ -51,8 +54,6 @@ def process(df1, df2, year):
 # find common name column and change it 
 
 # years = dfJoin.select('year').distinct().rdd.map(lambda x: x[0]).collect()
-
-
         dfJoin = dfJoin.filter(col('year') == year)
 
         uniqueAttr = 'unique_key'
@@ -70,13 +71,16 @@ def process(df1, df2, year):
         rdd1 = sc.parallelize(MImat)
         rdd2 = rdd1.map(lambda x: [float(i) for i in x])
         MImatdf = rdd2.toDF(attributes)
-        MImatdf.write.format("com.databricks.spark.csv").option("header", "true").option("delimiter",",").save("complain_property"+str(year))
+        MImatdf.write.format("com.databricks.spark.csv").option("header", "true").option("delimiter",",").save("property_complain"+str(year))
+
 
 df1 = sqlCtx.read.format('csv').options(header='true',inferschema='true').load("/user/hk2451/complain_cleaned")
-for k in range(10, 11):
-        year = 2000+k
-        df2 = sqlCtx.read.format('csv').options(header='true',inferschema='true').load("property"+str(k))
-        process(df1, df2, year)
+years = [int(sys.argv[1])]
+print("================================================================================")
+print(years)
+property_file = "property"+str(years[0]-2000)
+df2 = sqlCtx.read.format('csv').options(header='true',inferschema='true').load(property_file)
+process(df1, df2, years[0])
 
 sc.stop()
 
