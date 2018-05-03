@@ -47,7 +47,8 @@ b = df2.alias('b')
 dfJoin = a.join(b, a.yymmddA == b.yymmdd, 'inner').select([col('a.'+xx) for xx in a.columns] + [col('b.'+xx) for xx in b.columns])
 # Delete duplicated columns
 
-for colab in colAB:
+colDel = ['yymmdd','day','month','year']
+for colab in colDel:
 	dfJoin = dfJoin.drop(colab+'A')
 
 ##################################
@@ -76,4 +77,3 @@ MImatdf = rdd2.toDF(attributes)
 MImatdf.write.format("com.databricks.spark.csv").option("header", "true").option("delimiter",",").save("complain_collision"+str(years[k]))
         
 sc.stop()
-

@@ -35,6 +35,7 @@ print(years)
 
 colA = df1.columns
 colB = df2.columns
+
 colAB = list(set(colA).intersection(colB))
 
 for colab in colAB:
@@ -46,7 +47,8 @@ b = df2.alias('b')
 dfJoin = a.join(b, a.yymmddA == b.yymmdd, 'inner').select([col('a.'+xx) for xx in a.columns] + [col('b.'+xx) for xx in b.columns])
 # Delete duplicated columns
 
-for colab in colAB:
+colDel = ['yymmdd','day','month','year']
+for colab in colDel:
 	dfJoin = dfJoin.drop(colab+'A')
 
 ##################################
@@ -77,5 +79,3 @@ MImatdf = rdd2.toDF(attributes)
 MImatdf.write.format("com.databricks.spark.csv").option("header", "true").option("delimiter",",").save("collision_weather"+str(years[k]))
 
 sc.stop()
-
-

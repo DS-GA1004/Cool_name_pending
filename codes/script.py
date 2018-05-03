@@ -126,6 +126,7 @@ if ("weather" in filename):
 	# weather data
 	df2 = df.withColumn('date', col('date').cast(StringType()))
 	df2 = df2.withColumn('yymmdd', to_date(from_unixtime(unix_timestamp('date', 'yyyymmdd')))).drop('date')
+
 elif ("311" in filename):
 	df2 = df.withColumn('yymmdd', to_date(from_unixtime(unix_timestamp('created_date', 'MM/dd/yyyy'))))
 	df2 = df2.withColumn('time', col('created_date').substr(12, 11)).drop("created_date")
@@ -149,8 +150,10 @@ if ("property" not in filename):
 
 # Date into month only
 df2 = df2.withColumn('month', month("yymmdd"))
+
 # Date into year only
 df2 = df2.withColumn('year', year("yymmdd"))
+
 
 # Additional file cleaning (file specific)
 if ("weather" in filename):
@@ -185,6 +188,7 @@ if ("property" in filename):
 	df2 = df2.withColumn('extot2_floor', floor(df2.extot2 / 1000000)).drop('extot2')
 
 
+
 df2.write.format("com.databricks.spark.csv").option("header", "true").option("delimiter",",").save("weather_cleaned")
 
 
@@ -208,7 +212,6 @@ df1 = clean.zipcodeFilter(df1, 'end_zip')
 df1 = df1.withColumn('endZipcode',df1.zipcode).drop('zipcode')
 
 # Trip duration (By minitues and categorized by every 10 min)
-
 if yearIdx in [2017,2015,2016]:
 	timeFmt = "yyyy-MM-dd'T'HH:mm:ss.SSS"
 	df1 = df1.withColumn('tripTime',floor((unix_timestamp(df1.tpep_dropoff_datetime,format=timeFmt)-unix_timestamp(df1.tpep_pickup_datetime,format=timeFmt))/600))
