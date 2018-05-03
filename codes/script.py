@@ -89,37 +89,13 @@ df2.write.format("com.databricks.spark.csv").option("header", "true").option("de
 # cleaning : weather & property
 ##################################
 # Change the filename below
-filename = "file:///home/hk2451/project/data/weather/weather-2011-2017.csv"
-
 filename = "file:///home/hk2451/project/data/property/avroll_10.csv"
 dt = spark.read.format('csv').options(header='true',inferschema='true').load(filename)
 
 # Change name of the header (fill in black space with ‘_’ and delete ‘()’)
-exprs0 = [col(column).alias(column.strip()) for column in dt.columns]
-df = dt.select(*exprs0)
-exprs1 = [col(column).alias(column.replace(' ', '_')) for column in dt.columns]
-df = df.select(*exprs1)
-exprs2 = [col(column).alias(column.replace('(', '')) for column in df.columns]
-df = df.select(*exprs2)
-exprs3 = [col(column).alias(column.replace(')', '')) for column in df.columns]
-df = df.select(*exprs3)
-df = df.toDF(*[c.lower() for c in df.columns])
-
-
+df2 = clean.fixColumnName(dt)
 # Finding Null value (if the attribute has 90% null value, delete the attribute)
-totL = df.count()
-attrF = []
-for colName in df.columns:
-	attrF.append(df.filter(str(colName)+" is null").count()/totL)
-
-df = delete_useless_column(attrF, df, 0.9)
-
-# Finding Unspecified (if the attribute has over 90% unspecified, will delete)
-attrF = []
-for colName in df.columns:
-	attrF.append(df.filter(df[colName].like("%Unspecified%")).count()/totL)
-
-df = delete_useless_column(attrF, df, 0.9)
+df2 = clean.deleteNullAttr(df2)
 
 # Date Transformation
 if ("weather" in filename):
@@ -170,7 +146,7 @@ if ("property" in filename):
 	# Delete attrs w/o description
 	df2 = df2.drop('lot')
 	# Delete attrs with too many categories
-	df2 = df2.drop('block', 'ltdepth', 'owner','staddr')
+	df2 = df2.drop('block', 'owner','staddr')
 	# Delete attrs that most data has the same category value
 	df2 = df2.drop('valtype', 'period')
 	df2 = df2.withColumn('stories_floor', floor(df2.stories)).drop('stories')	
@@ -186,7 +162,6 @@ if ("property" in filename):
 	df2 = df2.withColumn('avland2_floor', floor(df2.avland2 / 1000000)).drop('avland2')
 	df2 = df2.withColumn('avtot2_floor', floor(df2.avtot2 / 1000000)).drop('avtot2')
 	df2 = df2.withColumn('extot2_floor', floor(df2.extot2 / 1000000)).drop('extot2')
-
 
 
 df2.write.format("com.databricks.spark.csv").option("header", "true").option("delimiter",",").save("weather_cleaned")
