@@ -1,0 +1,21 @@
+The python files are example script for calculating mutual information. 
+
+To run consecutively, check out shell scripts:
+	- taskByYear.sh
+	- taskByYearAll.sh
+	Example usage:
+	./taskByYear.sh 2012 "collision_weather" /home/hk2451/project/Cool_name_pending/codes/spark_submit/collision_weather_year
+
+You can modify filenames for new cleaned datasets. 
+For local use, check these files:
+	- collision_weather_year.py
+	- complain_collision_year.py
+	- complain_weather_year.py
+
+For hdfs use (for spark-sumit):
+	- script_spark_submit_collision_weather.py
+	- script_spark_submit_complain_weather.py
+	- script_spark_submit_complaint_collision.py
+
+
+
