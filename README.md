@@ -2,7 +2,7 @@
 Team name: Cool name pending /Big Data (DS-GA 1004) 18' Spring
 * [Team Members](#team-members)
 
-#<a name="team-members"><a/>Team Members
+# <a name="team-members"><a/>Team Members
   * "Heejong Kim" <https://github.com/heejong-kim>
   * "Jun Yuan" <https://github.com/junyuanjun>
   * "Jiin Nam" <https://github.com/Namssi>
