@@ -1,4 +1,4 @@
-addpath(genpath('/home/heejong/HDD2T/matlab_lib'))
+addpath(genpath('.'))
 clear; close all;
 %% filename and draw figure
 filename = 'complain_collision'
