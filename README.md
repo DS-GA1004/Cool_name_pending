@@ -36,14 +36,14 @@
  from pyspark import SparkConf, SparkContext
  
  # If you running pyspark in local:
- sc.addFile("/home/hk2451/project/Cool_name_pending/codes/cleaning/cleaning_io.py")
+ sc.addFile("where your files are located/cleaning_io.py")
  import cleaning_io as clean
  
  # If you running pyspark in hdfs:
  conf = SparkConf().setAppName("building a warehouse")
  sc = SparkContext(conf=conf)
  sqlCtx = SQLContext(sc)
- sc.addFile("/home/hk2451/project/Cool_name_pending/codes/cleaning/cleaning_io.py")
+ sc.addFile("where your files are located/cleaning_io.py")
  import cleaning_io as clean
  ```
   ### <a name="MI"><a/>Mutual information
