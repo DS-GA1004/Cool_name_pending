@@ -4,10 +4,10 @@
 - [Project Description](#project-description)
 - [Team Members](#team-members)
 - [Installation and How to use](#codes)
- * [Clone](#clone)
- * [Data cleaning](#data-cleaning)
- * [Mutual information](#MI)
- * [Visualization](#visualization)
+  * [Clone](#clone)
+  * [Data cleaning](#data-cleaning)
+  * [Mutual information](#MI)
+  * [Visualization](#visualization)
 ---
 
 ## <a name="project-description"><a/>Team name: Cool name pending (Big Data (DS-GA 1004) / 18' Spring)
@@ -47,6 +47,6 @@
  import cleaning_io as clean
  ```
   ### <a name="MI"><a/>Mutual information
-  As you did for the cleaning step, you need to specify your directory to use functions and files in the script. ([Adding python files with functions in the script][#data-cleaning])
+  As you did for the cleaning step, you need to specify your directory to use functions and files in the script. ([Adding python files with functions in the script](#data-cleaning))
 
   ### Visualization 
