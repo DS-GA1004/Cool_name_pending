@@ -1,6 +1,6 @@
 # Correlation analysis on spatiotemporal data
 Team name: Cool name pending /Big Data (DS-GA 1004) 18' Spring
-*[Team Members](#team-members)
+* [Team Members](#team-members)
 
 #<a name="team-members"><a/>Team Members
   * "Heejong Kim" <https://github.com/heejong-kim>
