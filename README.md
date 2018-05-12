@@ -15,7 +15,6 @@
  
   In this project, we introduce the pipeline of correlation analysis based on the spatiotemporal dataset. Our project follows the steps of data cleaning, Data integration, correlation calculation, visualization and analysis. 
 ![Picture](https://github.com/DS-GA1004/Cool_name_pending/blob/master/pipeline.png)
-<img src="https://github.com/DS-GA1004/Cool_name_pending/blob/master/pipeline.png" width="100">
 ---
 
 ## <a name="team-members"><a/>Team Members
@@ -99,6 +98,8 @@
         - cleaning_bar_chart.py
   Example output for bar chart:
   ![Picture](https://github.com/DS-GA1004/Cool_name_pending/blob/master/issue_columns.png)
+  <img src="https://github.com/DS-GA1004/Cool_name_pending/blob/master/issue_columns.png" width="500">
+
 	
   For correlation result, check the file:
         - script_analyze_and_draw.m
