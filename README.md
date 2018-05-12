@@ -1,10 +1,13 @@
 # Correlation analysis on spatiotemporal data
 
 ## Table of Contents
-* [Project Description](#project-description)
-* [Team Members](#team-members)
-* [Installation and How to use](#codes)
-
+- [Project Description](#project-description)
+- [Team Members](#team-members)
+- [Installation and How to use](#codes)
+ * [Clone](#clone)
+ * [Data cleaning](#data-cleaning)
+ * [Mutual information](#MI)
+ * [Visualization](#visualization)
 ---
 
 ## <a name="project-description"><a/>Team name: Cool name pending (Big Data (DS-GA 1004) / 18' Spring)
@@ -23,9 +26,9 @@
 ---
 
 ## <a name="codes"><a/>Installation and How to use
- ### Clone
+ ### <a name="clone"><a/>Clone
  - Clone this repo to your local machine using `https://github.com/DS-GA1004/Cool_name_pending.git`
- ### Data cleaning 
+ ### <a name="data-cleaning"><a/>Data cleaning
  You need to specify your directory to use functions and files in the script. For example, you may want functions defined in "cleaning_io.py" file in the script. "script_cleaning.py" script includes cleaning codes for all dataset. You can comment/uncomment the script. You can add files as follows:
  ```python
  from pyspark.sql import SparkSession
@@ -43,8 +46,7 @@
  sc.addFile("/home/hk2451/project/Cool_name_pending/codes/cleaning/cleaning_io.py")
  import cleaning_io as clean
  ```
- 
- * Data cleaning
- * Correlation Calculation
- * Visualization
- 
+  ### <a name="MI"><a/>Mutual information
+  As you did for the cleaning step, you need to specify your directory to use functions and files in the script. ([Adding python files with functions in the script][#data-cleaning])
+
+  ### Visualization 
