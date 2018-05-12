@@ -29,7 +29,7 @@
  ### <a name="clone"><a/>Clone
  - Clone this repo to your local machine using `https://github.com/DS-GA1004/Cool_name_pending.git`
  ### <a name="data-cleaning"><a/>Data cleaning and aggregation
- 1. Overall cleaning and aggregation. You need to specify your directory to use functions and files in the script. For example, you may want functions defined in "cleaning_io.py" file in the script. "script_cleaning.py" script includes cleaning codes for all dataset. You can comment/uncomment the script. You can add files as follows:
+ 1. Overall cleaning and aggregation. You need to specify your directory to use functions and files in the script. For example, you may want functions defined in "Cool_name_pending/codes/cleaning_io.py" file in the script. "Cool_name_pending/codes/script_cleaning.py" script includes cleaning codes for all dataset. You can comment/uncomment the script. You can add files as follows:
  ```python
  from pyspark.sql import SparkSession
  from pyspark.sql import SQLContext
@@ -46,7 +46,10 @@
  sc.addFile("where your files are located/cleaning_io.py")
  import cleaning_io as clean
  ```
- 2. Convert longitude latitude coordinate to zipcode. There are dataset having longitude and latitude coordinate only. We converted the information separately using java. 
+ 2. Convert longitude latitude coordinate to zipcode. There are dataset having longitude and latitude coordinate only. We converted the information separately using java. The script and related files are under "Cool_name_pending/codes/zipcode_mapping".
+ Pipeline for zipcode mapping algorithm:
+ ![Picture](https://github.com/DS-GA1004/Cool_name_pending/blob/master/ZipMapping.png)
+
  ```sh
  #1. how to run
 	#./run.sh dataset_num date(in the shape for each dataset)
@@ -92,3 +95,22 @@
 
 
   ### Visualization 
+  We used matlab and python for analyzing results and drawing plots. All files related to visualization and analysis are located under "Cool_name_pending/codes/visualization"
+  For cleaning result, check the file:
+        - cleaning_bar_chart.py
+  Example output for bar chart:
+  ![Picture](https://github.com/DS-GA1004/Cool_name_pending/blob/master/issue_columns.png)
+	
+  For correlation result, check the file:
+        - script_analyze_and_draw.m
+        The script has dependencies which are:
+                - [cbrewer][1]
+                - [readline][2]
+  Example output for correlation matrix and line chart:
+  ![Picture](https://github.com/DS-GA1004/Cool_name_pending/blob/master/weather_taxi2016.png)
+  ![Picture](https://github.com/DS-GA1004/Cool_name_pending/blob/master/weather_taxi_temporal_g1.png)
+		
+  [1]:https://www.mathworks.com/matlabcentral/fileexchange/34087-cbrewer---colorbrewer-schemes-for-matlab
+  [2]:https://www.mathworks.com/matlabcentral/fileexchange/20026-readline-m-v4-0
+
+
