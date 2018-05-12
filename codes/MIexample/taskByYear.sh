@@ -14,9 +14,5 @@ echo /usr/bin/hadoop fs -rm -r "${PAIRNAME}${YEAR}"
 /usr/bin/hadoop fs -rm -r "${PAIRNAME}${YEAR}"
 echo spark-submit --conf spark.pyspark.python=/share/apps/python/3.4.4/bin/python "$SPARKCODE" "${YEAR}"
 spark-submit --conf spark.pyspark.python=/share/apps/python/3.4.4/bin/python "$SPARKCODE" "${YEAR}"
-echo /usr/bin/hadoop fs -getmerge "$TMPFILE" "$TMPFILE".tmp
-/usr/bin/hadoop fs -getmerge "$TMPFILE" "$TMPFILE".tmp
-echo cat "$TMPFILE".tmp > "$TMPFILE"
-cat "$TMPFILE".tmp > "$TMPFILE"
-echo rm "$TMPFILE".tmp
-rm "$TMPFILE".tmp
+echo /usr/bin/hadoop fs -getmerge "$TMPFILE" "$TMPFILE"
+/usr/bin/hadoop fs -getmerge "$TMPFILE" "$TMPFILE"
