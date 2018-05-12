@@ -105,9 +105,7 @@
 	
   For correlation result, check the file:
         - script_analyze_and_draw.m
-        The script has dependencies which are:
-                	- [cbrewer][1]
-                	- [readline][2]
+        The script has dependencies which are: [cbrewer][1] and [readline][2]
 		
   Example output for correlation matrix and line chart:
   
