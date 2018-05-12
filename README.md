@@ -14,8 +14,7 @@
  In terms of big data, we often face a lot of data issues. So we target the main data quality issues in the 7 datasets we process. And then we demonstrate the rules to do the data cleaning and aggregation which can be a guide for people who deal with big urban data. In this project, we calculate mutual information inside a dataset and cross different datasets. The correlation analysis based on the data processing and facts really help to make insights on the city functions and make better decisions on urban planning.
  
   In this project, we introduce the pipeline of correlation analysis based on the spatiotemporal dataset. Our project follows the steps of data cleaning, Data integration, correlation calculation, visualization and analysis. 
-![Picture](https://github.com/DS-GA1004/Cool_name_pending/blob/master/pipeline.png){: width="50%" height="40%"}
-
+![Picture](https://github.com/DS-GA1004/Cool_name_pending/blob/master/pipeline.png)
 ---
 
 ## <a name="team-members"><a/>Team Members
@@ -48,7 +47,7 @@
  ```
  2. Convert longitude latitude coordinate to zipcode. There are dataset having longitude and latitude coordinate only. We converted the information separately using java. The script and related files are under "Cool_name_pending/codes/zipcode_mapping".
  Pipeline for zipcode mapping algorithm:
- ![Picture](https://github.com/DS-GA1004/Cool_name_pending/blob/master/ZipMapping.png =250x)
+ ![Picture](https://github.com/DS-GA1004/Cool_name_pending/blob/master/ZipMapping.png)
 
  ```sh
  #1. how to run
@@ -98,7 +97,7 @@
   For cleaning result, check the file:
         - cleaning_bar_chart.py
   Example output for bar chart:
-  ![Picture](https://github.com/DS-GA1004/Cool_name_pending/blob/master/issue_columns.png =250x)
+  ![Picture](https://github.com/DS-GA1004/Cool_name_pending/blob/master/issue_columns.png)
 	
   For correlation result, check the file:
         - script_analyze_and_draw.m
@@ -106,8 +105,8 @@
                 - [cbrewer][1]
                 - [readline][2]
   Example output for correlation matrix and line chart:
-  ![Picture](https://github.com/DS-GA1004/Cool_name_pending/blob/master/weather_taxi2016.png =250x)
-  ![Picture](https://github.com/DS-GA1004/Cool_name_pending/blob/master/weather_taxi_temporal_g1.png =250x)
+  ![Picture](https://github.com/DS-GA1004/Cool_name_pending/blob/master/weather_taxi2016.png)
+  ![Picture](https://github.com/DS-GA1004/Cool_name_pending/blob/master/weather_taxi_temporal_g1.png)
 		
   [1]:https://www.mathworks.com/matlabcentral/fileexchange/34087-cbrewer---colorbrewer-schemes-for-matlab
   [2]:https://www.mathworks.com/matlabcentral/fileexchange/20026-readline-m-v4-0
