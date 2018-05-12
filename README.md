@@ -97,8 +97,7 @@
   For cleaning result, check the file:
         - cleaning_bar_chart.py
   Example output for bar chart:
-  ![Picture](https://github.com/DS-GA1004/Cool_name_pending/blob/master/issue_columns.png)
-  <img src="https://github.com/DS-GA1004/Cool_name_pending/blob/master/issue_columns.png" width="500">
+  <img align="center" src="https://github.com/DS-GA1004/Cool_name_pending/blob/master/issue_columns.png" width="700">
 
 	
   For correlation result, check the file:
@@ -107,9 +106,8 @@
                 - [cbrewer][1]
                 - [readline][2]
   Example output for correlation matrix and line chart:
-  ![Picture](https://github.com/DS-GA1004/Cool_name_pending/blob/master/weather_taxi2016.png)
-  ![Picture](https://github.com/DS-GA1004/Cool_name_pending/blob/master/weather_taxi_temporal_g1.png)
-		
+    <img align="center" src="https://github.com/DS-GA1004/Cool_name_pending/blob/master/weather_taxi2016.png" width="700">
+    <img align="center" src="https://github.com/DS-GA1004/Cool_name_pending/blob/master/weather_taxi_temporal_g1.png" width="700">
   [1]:https://www.mathworks.com/matlabcentral/fileexchange/34087-cbrewer---colorbrewer-schemes-for-matlab
   [2]:https://www.mathworks.com/matlabcentral/fileexchange/20026-readline-m-v4-0
 
