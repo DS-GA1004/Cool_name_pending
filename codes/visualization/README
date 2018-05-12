@@ -1,0 +1,10 @@
+The python files are example script for analyzing and drawing plots
+
+For cleaning result, check the file:
+        - cleaning_bar_chart.py
+
+For correlation result, check the file:
+        - script_analyze_and_draw.m
+        The script has dependencies which are:
+                - cbrewer
+                - readline
