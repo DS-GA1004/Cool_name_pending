@@ -47,8 +47,7 @@
  ```
  2. Convert longitude latitude coordinate to zipcode. There are dataset having longitude and latitude coordinate only. We converted the information separately using java. The script and related files are under "Cool_name_pending/codes/zipcode_mapping".
  Pipeline for zipcode mapping algorithm:
- ![Picture](https://github.com/DS-GA1004/Cool_name_pending/blob/master/ZipMapping.png)
-
+ <img align="center" src="https://github.com/DS-GA1004/Cool_name_pending/blob/master/ZipMapping.png" width="700">
  ```sh
  #1. how to run
 	#./run.sh dataset_num date(in the shape for each dataset)
@@ -108,6 +107,9 @@
   Example output for correlation matrix and line chart:
     <img align="center" src="https://github.com/DS-GA1004/Cool_name_pending/blob/master/weather_taxi2016.png" width="700">
     <img align="center" src="https://github.com/DS-GA1004/Cool_name_pending/blob/master/weather_taxi_temporal_g1.png" width="700">
+    
+    
+    
   [1]:https://www.mathworks.com/matlabcentral/fileexchange/34087-cbrewer---colorbrewer-schemes-for-matlab
   [2]:https://www.mathworks.com/matlabcentral/fileexchange/20026-readline-m-v4-0
 
