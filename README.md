@@ -109,9 +109,9 @@
 		
   Example output for correlation matrix and line chart:
   
-    <img align="center" src="https://github.com/DS-GA1004/Cool_name_pending/blob/master/weather_taxi2016.png" width="700">
+  <img align="center" src="https://github.com/DS-GA1004/Cool_name_pending/blob/master/weather_taxi2016.png" width="700">
     
-    <img align="center" src="https://github.com/DS-GA1004/Cool_name_pending/blob/master/weather_taxi_temporal_g1.png" width="700">
+  <img align="center" src="https://github.com/DS-GA1004/Cool_name_pending/blob/master/weather_taxi_temporal_g1.png" width="700">
     
     
     
